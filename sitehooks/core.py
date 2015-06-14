@@ -1,3 +1,4 @@
+import glob
 import os
 import traceback
 import warnings
@@ -46,11 +47,11 @@ except Exception as e:
 '''.strip().replace('   ', '\t')
 
 
-def install(site_packages, module, func, prefix='zzz_',
+def install(site_packages, module, func, prefix='zzz_', postfix='',
     args=None, kwargs=None, append_path=True, verbose=False, dry_run=False
 ):
 
-    hook_path = os.path.join(site_packages, '%s%s_%s.pth' % (prefix, module, func))
+    hook_path = os.path.join(site_packages, '%s%s_%s%s.pth' % (prefix, module, func, postfix))
     if verbose:
         print 'installing:', hook_path
 
@@ -77,10 +78,10 @@ def install(site_packages, module, func, prefix='zzz_',
         fh.write('import warnings; exec %r\n' % '\n'.join(hook_source))
 
 
-def uninstall(site_packages, module, func=None, prefix=None,
+def uninstall(site_packages, module, func=None, prefix=None, postfix=None,
     verbose=False, dry_run=False
 ):
-    pattern = (prefix or '*') + module + ('_' + func if func else '*') + '.pth'
+    pattern = (prefix or '*') + module + ('_' + func if func else '*') + (postfix or '*') + '.pth'
     for hook_path in glob.glob(os.path.join(site_packages, pattern)):
         if verbose:
             print 'uninstalling:', hook_path
