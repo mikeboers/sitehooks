@@ -9,6 +9,12 @@ import pkg_resources
 triggered = False
 
 def trigger():
+    """Trigger the primary hooks: ``sitehooks`` and ``sitecustomize``.
+    
+    This function may be called several times, but will only actually
+    trigger the hooks once.
+
+    """
 
     global triggered
     if triggered:
@@ -43,7 +49,7 @@ try:
     import {module}
     {module}.{func}({argspec})
 except Exception as e:
-    warnings.warn('%s during sitehook.trigger(): %s' % (e.__class__.__name__, e))
+    warnings.warn('%s during {module}.{func}(...): %s' % (e.__class__.__name__, e))
 '''.strip().replace('   ', '\t')
 
 
